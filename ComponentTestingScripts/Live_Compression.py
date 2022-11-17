@@ -42,10 +42,10 @@ while(True):
         # Convert, compress, and save image
         # pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_YUV2RGB))
         # encode_jp2 = [int(cv2.IMWRITE_JPEG2000_COMPRESSION_X1000), 300] # Set jpeg2000 compression ratio to 30%
-        # res, img_comp = cv2.imencode('.jp2', frame, encode_jp2)
-        # img_dec = cv2.imdecode(img_comp, cv2.IMREAD_COLOR)
-        # out_comp.write(img_dec)
-        out_comp.write(frame)
+        res, img_comp = cv2.imencode('.jp2', frame, encode_jp2)
+        img_dec = cv2.imdecode(img_comp, cv2.IMREAD_COLOR)
+        out_comp.write(img_dec)
+        # out_comp.write(frame)
         
         # Press Q on keyboard to stop recording
         if cv2.waitKey(1) & 0xFF == ord('q'):
