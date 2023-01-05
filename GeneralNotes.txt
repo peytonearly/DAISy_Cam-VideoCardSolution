@@ -1,0 +1,51 @@
+--- General notes for compression algorithms ---
+
+-- Critical Functions --
+General:
+    - Frame compression
+        May want to make individual functions for each compression codec
+        May need different functions for live vs post-capture methods if they handle image data differently
+    - Camera initialization
+        Ensure camera stream opened properly
+        Ensure it is reading video data properly (i.e. not just a blue screen)
+    - Recreate video file from compressed frames
+        May need different functions for live vs post-capture methods if they handle image data differently
+    - Transfer video to OBC
+    - Decompression
+
+Live compression:
+    - Compression of currently viewed frame
+        Compressed image will need to be saved, likely as a png file
+    - Loop through saved image files
+        Need to determine where to store image files (OBC vs local storage)
+
+Post-capture:
+    - Save frame to 3D array
+        Need to determine where to store image files (OBC vs local storage)
+    - Loop through each image in array (each 2D slide in the 3D array) and compress
+        May need to tinker with compression so that it works with matrices instead of just image files
+
+
+-- Secondary Functions --
+- Dropped frame tracker
+    Should take 1/30 seconds per frame. Track time spent on each frame (maybe in an array) and use to create logical vector
+- Buffer/storage requirement throughout program
+    Could be array of integer/float values that represent current storage usage
+- Algorithm runtime
+- Transfer rate between system and OBC
+    Should ensure that bitrate is within spacewire limits
+
+-- Notes --
+- We might want the programs to just store images on the OBC and have it run the recompile function since that might be how the video is sent anyways
+    Need to decide what functions need to be run on the Pi and what can be run on the OBC
+- Two options for compression methods:
+    1. Create a unique function for each compression codec
+        More functions means more storage needed, more operations needed (to transfer control between functions), more opportunities for it to break
+    2. Codec choice is passed as a flag to the function
+        Different codecs may need different code, will need to ensure no errors in deciphering codec flag
+- Preferred that tracker functions are run on the Pi system loop rather than in the compression programs themselves
+    This would ensure that the performance isn't being impacted by these trackers
+- Performance might be degraded if functions are stored across multiple files and needed to be imported
+    C/C++ would be better for this method, so it is important to keep this in mind if performance is suffering
+- Connections to OBC should be monitored to ensure they are open throughout the program
+    Should try to avoid using OBC when possible to preserve battery and avoid potential for errors
