@@ -1,9 +1,7 @@
 ### Main Raspberry Pi Loop ###
 
+from pathlib import Path
 import cv2
-import numpy as np
-from PIL import Image
-import os
 
 # Create flags class
 class FLAG:
@@ -27,21 +25,41 @@ class FLAG:
             self.TRANSMIT = 1
 
     # Check if folder flag should be updated
-    def CheckFolder(self):
-        pass
+    def CheckFolder(self, u):
+        self.FOLDER = any(u.iterdir())
 
     # Check if equal flag should be updated
-    def CheckEqual(self):
+    def CheckEqual(self, u, c):
+        self.EQUAL = len(u.iterdir()) == len(c.iterdir())
+
+class Arm:
+    # Class initialization
+    def __init__(self):
+        self.ACTION = 0
+        self.STATUS = 0
+
+    # Send action command to Arduino
+    def SendAction(self):
         pass
 
-# Create compressed/uncompressed directories
+### Create compressed/uncompressed directories ###
+p = Path(__file__).parent # Set path at current working directory (cwd)
+u = p / 'Uncompressed'
+c = p / 'Compressed'
+
+# Create image directories if they don't yet exist
+if not u.exists():
+    u.mkdir(parents=True, exist_ok=False)
+if not c.exists():
+    c.mkdir(parents=True, exist_ok=False)
 
 # Connect camera
+cam = cv2.VideoCapture(0)
 
 # Connect to arm
 
 # Begin main loop
-while True:
+# while True:
     # Update flags
 
     # Display GUI
