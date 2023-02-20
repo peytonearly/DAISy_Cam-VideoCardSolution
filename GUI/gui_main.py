@@ -15,6 +15,7 @@ box = canvas.create_rectangle(1000, 1000, 0, 0, fill='grey')
 # Create deploy arm button
 button_deploy_arm = canvas.create_rectangle(10,100,210,150,fill = 'green')
 
+
 # Create retract arm button
 button_retract_arm = canvas.create_rectangle(10,200,210,252,fill = 'yellow')
 
