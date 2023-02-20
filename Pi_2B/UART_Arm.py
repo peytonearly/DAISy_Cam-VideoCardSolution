@@ -4,11 +4,12 @@ from time import sleep
 # Create and open serial communication object
 com = serial.Serial('/dev/ttyAMA0', baudrate=9600)
 
+# Reopen communication port
 if com.is_open:
     com.close()
-
 com.open()
 
+# Write outputs for Arduino testing
 for _ in range(100):
     com.write('0'.encode('utf-8'))
     print('0')

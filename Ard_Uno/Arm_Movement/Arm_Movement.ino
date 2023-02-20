@@ -29,15 +29,15 @@ void setup() {
   // pinMode(dir_plus_in, INPUT);
   // pinMode(dir_minus_in, INPUT);
 
-  Serial.begin(9600);
+  Serial.begin(9600); // Start serial communication with baudrate=9600
 }
 
 void loop() {
-  input = Serial.read();
+  input = Serial.read(); // Read input from serial port
 
   // Perform action depending on received input
   switch (input) {
-    case -1: // No input > Do nothing
+    case -1: // Returned when no input > Do nothing
       break;
     case 0: // Arm fully closed
       digitalWrite(pul_plus_out, HIGH); //send high signal to PUL+ on driver

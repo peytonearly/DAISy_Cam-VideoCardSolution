@@ -15,5 +15,5 @@ void loop() {
     // delay(500);
   } // Wait until data is available
   input = Serial.read(); // Read until timeout
-  Serial.println(char(input));
+  Serial.println(char(input)); // Print received character
 }
