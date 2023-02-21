@@ -19,9 +19,9 @@ class FLAG:
         self.ACTIVE      = 0 # 1 if compression algorithm is running
     
     # Update all flag values
-    def UpdateFlags(self):
-        self.CheckFolder()
-        self.CheckEqual()
+    def UpdateFlags(self, u: Path(), c: Path()):
+        self.CheckFolder(u)
+        self.CheckEqual(u, c)
         self.CheckTransmit()
 
     # Check if transmit flag should be updated
@@ -30,12 +30,12 @@ class FLAG:
             self.TRANSMIT = 1
 
     # Check if folder flag should be updated
-    def CheckFolder(self, u):
-        self.FOLDER = any(u.iterdir())
+    def CheckFolder(self, u: Path()):
+        self.FOLDER = any(u.glob('*/*.png'))
 
     # Check if equal flag should be updated
-    def CheckEqual(self, u, c):
-        self.EQUAL = len(u.iterdir()) == len(c.iterdir())
+    def CheckEqual(self, u: Path(), c: Path()):
+        self.EQUAL = len(list(u.glob('*/*.png'))) == len(list(c.glob('*/*.png')))
 
 class Arm:
     # Class initialization
@@ -50,43 +50,46 @@ class Arm:
     def SendAction(self):
         pass
     
-# Initialize flag class
-flags = FLAG()
+if __name__ == "__main__":
+    
+    # Initialize flag class
+    flags = FLAG()
 
-### Create compressed/uncompressed directories ###
-p = Path(__file__).parent # Set path at current working directory (cwd)
-u = p / 'Uncompressed'
-c = p / 'Compressed'
+    ### Create compressed/uncompressed directories ###
+    p = Path(__file__).parent # Set path at current working directory (cwd)
+    u = p / 'Uncompressed'
+    c = p / 'Compressed'
 
-# Create image directories if they don't yet exist
-if not u.exists():
-    u.mkdir(parents=True, exist_ok=False)
-if not c.exists():
-    c.mkdir(parents=True, exist_ok=False)
+    # Create image directories if they don't yet exist
+    if not u.exists():
+        u.mkdir(parents=True, exist_ok=False)
+    if not c.exists():
+        c.mkdir(parents=True, exist_ok=False)
 
-# Connect camera
-cam = cv2.VideoCapture(0)
-if not cam.isOpened():
-    print("Cannot open camera. Exiting...")
-    # exit()
+    # Connect camera
+    cam = cv2.VideoCapture(0)
+    if not cam.isOpened():
+        print("Cannot open camera. Exiting...")
+        # exit()
 
-# Connect to arm
+    # Connect to arm
+    print('Done')
+    print()
+    # # Begin main loop
+    # while True:
+    #     # Update flags
+    #     flags.UpdateFlags(u, c)
 
-# Begin main loop
-while True:
-    # Update flags
-    flags.UpdateFlags()
+    #     # Display GUI
 
-    # Display GUI
+    #     # Run frame saving (if needed)
+    #     if flags.RECORD:
+    #         pass
 
-    # Run frame saving (if needed)
-    if flags.RECORD:
-        pass
+    #     # Run compression algorithm (if needed)
+    #     if flags.FOLDER:
+    #         pass
 
-    # Run compression algorithm (if needed)
-    if flags.FOLDER:
-        pass
-
-    # Run transmit algorithm (if needed)
-    if flags.TRANSMIT:
-        pass
+    #     # Run transmit algorithm (if needed)
+    #     if flags.TRANSMIT:
+    #         pass
