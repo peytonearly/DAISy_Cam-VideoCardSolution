@@ -23,6 +23,8 @@ void setup() {
   stepper.setSpeed(5); // Set motor speed to 5 RPMs
 }
 
+int numRot = 0; // Number of rotations from origin (arm closed)
+int maxRot = 5; // Maximum number of arm rotations -- corresponds to arm fully open 
 void loop() {
   input = Serial.read(); // Read input from serial port
 
@@ -32,19 +34,17 @@ void loop() {
       Serial.println("No input");
       break;
     case 0: // Arm fully closed
-      stepper.step(-1*STEPS_PER_CYCLE);
       Serial.println("Closing arm");
       break;
     case 1: // Arm fully opened
-      stepper.step(STEPS_PER_CYCLE);
       Serial.println("Opening arm");
       break;
-    case 2: // Stop in place
+    case 2: // Pause movement
       Serial.println("Empty input");
       break;
-    case 3: // Loop between open and closed
-      
+    case 3: // Resume movement
+      break;
+    case 4: // Loop between open and closed
       break;
   }
-
 }
