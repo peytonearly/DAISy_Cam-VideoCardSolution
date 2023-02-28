@@ -37,17 +37,17 @@ class GUI:
         # Create master window
         self.master = tk.Tk()
         self.master.title("DAISy Cam Video Control Interface")
-        self.master.geometry('{}x{}'.format(700, 500))
+        self.master.geometry("700x500")
         
         # Create main sections
         self.vidCtrlFrame = tk.Frame(self.master, bg='gray', width=150, height=150, padx=3, pady=3)
-        self.compFrame = tk.Frame(self.master, bg='blue', width=150, height=150, padx=3, pady=3)
-        self.armFrame = tk.Frame(self.master, bg='green', width=200, height=150, padx=3, pady=3)
-        self.camFrame = tk.Frame(self.master, bg='yellow', width=300, height=300, padx=3, pady=3)
-        self.statFrame = tk.Frame(self.master, bg='orange', width=200, height=300, padx=3, pady=3)
+        self.compFrame    = tk.Frame(self.master, bg='blue', width=150, height=150, padx=3, pady=3)
+        self.armFrame     = tk.Frame(self.master, bg='green', width=200, height=150, padx=3, pady=3)
+        self.camFrame     = tk.Frame(self.master, bg='yellow', width=300, height=300, padx=3, pady=3)
+        self.statFrame    = tk.Frame(self.master, bg='orange', width=200, height=300, padx=3, pady=3)
         self.consoleFrame = tk.Frame(self.master, bg='red', width=200, height=500, padx=3, pady=3)
         
-        # Layout main sections
+        # # Layout main sections
         self.vidCtrlFrame.grid(row=0, column=0, rowspan=2, sticky='nesw')
         self.compFrame.grid(row=0, column=1, rowspan=2, sticky='nesw')
         self.armFrame.grid(row=0, column=2, columnspan=2, rowspan=2, sticky='nesw')
