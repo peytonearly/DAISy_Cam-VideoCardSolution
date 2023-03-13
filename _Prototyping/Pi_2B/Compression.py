@@ -49,21 +49,16 @@ def Compression(flags: FLAG):
     image = cv2.imread(str(uncompNext))
     
     # Set compression method parameters
-    if not flags.METHOD:
-        # No compression method
+    if not flags.METHOD: # No compression method
         # params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
         params = []
-    elif flags.METHOD == 1:
-        # JPEG2000
+    elif flags.METHOD == 1: # JPEG2000
         params = [cv2.IMWRITE_JPEG2000_COMPRESSION_X1000, flags.COMPQUAL]
-    elif flags.METHOD == 2:
-        # Run-length encoding
+    elif flags.METHOD == 2: # Run-length encoding
         params = [cv2.IMWRITE_PNG_STRATEGY_RLE, flags.COMPQUAL]
-    elif flags.METHOD == 3:
-        # Dynamics Huffman encoding
+    elif flags.METHOD == 3: # Dynamics Huffman encoding
         params = [cv2.IMWRITE_PNG_STRATEGY_HUFFMAN_ONLY, flags.COMPQUAL]
-    elif flags.METHOD == 4:
-        # Static Huffman encoding
+    elif flags.METHOD == 4: # Static Huffman encoding
         params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
 
     # Save compressed image
@@ -77,8 +72,6 @@ if __name__ == "__main__":
     flags = FLAG()
     flags.METHOD = 0
 
-    RemoveDirectories(flags)
-
-    # while not flags.EQUAL:
-    #     Compression(flags)
-    #     flags.UpdateFlags()
+    while not flags.EQUAL:
+        Compression(flags)
+        flags.UpdateFlags()

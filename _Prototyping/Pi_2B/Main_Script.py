@@ -61,6 +61,7 @@ class FLAG:
     def CheckFolder(self):
         self.FOLDER = any(list(self.u.glob('*.png')))
 
+    # Check if anything exists in the compressed folder
     def CheckCompressedFolder(self):
         return any(list(self.c.glob('*.png')))
 
