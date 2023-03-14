@@ -8,13 +8,15 @@ import time
 
 # Import project files
 from Flag import FLAG
-import GUI
+from GUI import GUI
 import Compressing
 import Saving
 import Transmitting
-import Arm_Control
+from Arm_Control import Arm
 
 ### Program Launch Initialization ###
-
+flags = FLAG()
+arm = Arm()
+gui = GUI(flags)
 
 ### Program Main Loop ###
