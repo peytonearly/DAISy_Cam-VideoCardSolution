@@ -11,6 +11,8 @@ import datetime
 print("Installing required libraries.")
 subprocess.call("Install_Reqs.sh", shell=True)
 print("Libraries installed.")
+
+# Import libraries
 import cv2
 import serial
 
