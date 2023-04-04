@@ -18,6 +18,8 @@ if __name__ == "__main__":
 
     while True:
         message = input("Enter a message to send to the server: ")
+        if message == "q":
+            break
         s.send(bytes(message, "utf-8"))
         data = s.recv(1024)
         print(data.decode("utf-8"))

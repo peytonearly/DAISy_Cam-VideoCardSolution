@@ -41,4 +41,4 @@ if __name__ == "__main__":
         ret, frame = cam.read()
         
         if ret:
-            Saving(flags, frame)
+            SaveFrame(flags, frame)

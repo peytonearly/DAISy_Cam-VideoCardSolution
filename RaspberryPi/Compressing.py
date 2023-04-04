@@ -44,7 +44,7 @@ def Compression(flags: FLAG):
         params = [cv2.IMWRITE_JPEG2000_COMPRESSION_X1000, flags.COMPQUAL]
     elif flags.METHOD == 2: # Run-length encoding
         params = [cv2.IMWRITE_PNG_STRATEGY_RLE, flags.COMPQUAL]
-    elif flags.METHOD == 3: # Dynamics Huffman encoding
+    elif flags.METHOD == 3: # Dynamic Huffman encoding
         params = [cv2.IMWRITE_PNG_STRATEGY_HUFFMAN_ONLY, flags.COMPQUAL]
     elif flags.METHOD == 4: # Static Huffman encoding
         params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
