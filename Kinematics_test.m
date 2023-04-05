@@ -4,11 +4,11 @@ clear all
 close all
 
 %% Important Values
-img_diag = 40;  % [in]
+img_diag = 115;  % [in]
 h_res = 1296;   % [pixels]
 v_res = 976;    % [pixels]
 
-PPI = sqrt((h_res^2 + v_res^2)/img_diag);
+PPI = sqrt((h_res^2 + v_res^2))/img_diag;
 
 % Joint 1
 R1 = 3.445;
@@ -22,10 +22,11 @@ G2 = 2.504;
 R3 = 3.566;
 G3 = 2.543;
 
-R = [R1,R1,R1,R1,R2,R2,R2,R3,R3,R3];
-G = [G1,G1,G1,G1,G2,G2,G2,G3,G3,G3];
+R = [R1,R1,R1,R2,R2,R2,R3,R3,R3];
+G = [G1,G1,G1,G2,G2,G2,G3,G3,G3];
 
-for i = 1:10
+
+for i = 1:9
     filename = "Test_Log" + num2str(i) + ".txt";
     data = load(filename);
     joint_angles = [];
@@ -41,16 +42,15 @@ for i = 1:10
         if rx ~= -1 && gx ~= -1 && ry ~= -1 && gy ~= -1
             pixel_distance =  sqrt((gx-rx)^2+(gy-ry)^2);
             distance = pixel_distance/PPI;
-            disp(distance);
+            % disp(distance);
             joint_angles(idx) = acosd((r^2+g^2-distance^2)/(2*r*g));
             % disp(acosd((r^2+g^2-distance^2)/(2*r*g)));
-            time(idx) = data(j,5);
+            time(idx) = data(j,5)/1000;
             idx = idx + 1;
         end
     end
-    plot(time,joint_angles);
-
-
+    save("Test_" + num2str(i)+"_angles","joint_angles",'-mat')
+    save("Test_" + num2str(i)+"_time","time",'-mat')
 
 end
 
