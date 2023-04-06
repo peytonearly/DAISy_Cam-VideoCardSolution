@@ -29,28 +29,28 @@ def Compression(flags: FLAG):
         uncompNext = flags.u / uncompNext
         nextComp = flags.c / nextComp
 
-        # Break if file hasn't been created yet
-        if not Path(uncompNext).exists():
-            return
+    # Continue if file has been created 
+    if Path(uncompNext).exists():
 
-    # Load frame from uncompressed folder
-    image = cv2.imread(str(uncompNext))
-    
-    # Set compression method parameters
-    if not flags.METHOD: # No compression method
-        # params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
-        params = []
-    elif flags.METHOD == 1: # JPEG2000
-        params = [cv2.IMWRITE_JPEG2000_COMPRESSION_X1000, flags.COMPQUAL]
-    elif flags.METHOD == 2: # Run-length encoding
-        params = [cv2.IMWRITE_PNG_STRATEGY_RLE, flags.COMPQUAL]
-    elif flags.METHOD == 3: # Dynamic Huffman encoding
-        params = [cv2.IMWRITE_PNG_STRATEGY_HUFFMAN_ONLY, flags.COMPQUAL]
-    elif flags.METHOD == 4: # Static Huffman encoding
-        params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
+        # Load frame from uncompressed folder
+        image = cv2.imread(str(uncompNext))
+        
+        # Set compression method parameters
+        if flags.METHOD == 0: # No compression method
+            # params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
+            params = []
+        elif flags.METHOD == 1: # JPEG2000
+            params = [cv2.IMWRITE_JPEG2000_COMPRESSION_X1000, flags.COMPQUAL]
+        elif flags.METHOD == 2: # Run-length encoding
+            params = [cv2.IMWRITE_PNG_STRATEGY_RLE, flags.COMPQUAL]
+        elif flags.METHOD == 3: # Dynamic Huffman encoding
+            params = [cv2.IMWRITE_PNG_STRATEGY_HUFFMAN_ONLY, flags.COMPQUAL]
+        elif flags.METHOD == 4: # Static Huffman encoding
+            params = [cv2.IMWRITE_PNG_STRATEGY_FIXED, flags.COMPQUAL]
 
-    # Save compressed image
-    cv2.imwrite(str(nextComp), image, params)
+        # Save compressed image
+        cv2.imwrite(str(nextComp), image, params)
+    return
 
 ### Testing ###
 # Will run if this file is called #

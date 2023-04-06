@@ -7,7 +7,7 @@ class Arm:
     def __init__(self):
         # Create and open serial communiccation object
         # self.COM = serial.Serial('/dev/tty/AMA0', baudrate=9600) # Pin connection
-        self.COM = serial.Serial('dev/serial0', baudrate = 9600) # USB connection
+        self.COM = serial.Serial('/dev/serial0', baudrate = 9600) # USB connection
 
 ### Testing ###
 # Will run if this file is called #

@@ -8,7 +8,7 @@ if __name__ == "__main__":
     ### From ChatGPT ###
     ####################
 
-    ipAddress = "127.0.1.1"
+    ipAddress = "192.168.137.122"
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((ipAddress, 5555))

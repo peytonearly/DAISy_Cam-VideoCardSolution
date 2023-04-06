@@ -17,7 +17,7 @@ if __name__ == "__main__":
     ####################
 
     # hostname = socket.gethostname()
-    hostname = "0.0.0.0"
+    hostname = "192.168.137.122"
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((hostname, 5555))
     s.listen(1)

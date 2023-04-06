@@ -26,6 +26,7 @@ def SaveFrame(flags: FLAG, im):
 
     # Save image with openCV
     cv2.imwrite(str(nextFileName), im)
+    return
     
 ### Testing ###
 # Will run if this file is called #
