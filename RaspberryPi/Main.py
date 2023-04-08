@@ -25,13 +25,11 @@ import GUI
 from Arm_Control import Arm
 from Compressing import Compression
 from Saving import SaveFrame
-from Transmit_Server import Transmit
+from Transmiting import Transmit
 
 #########################
 ### Project Functions ###
 #########################
-def CompProcess():
-    pass
 
 #########################
 ### Project Main Code ###
@@ -42,6 +40,7 @@ if __name__ == "__main__":
     flags.METHOD = 0
     flags.RECORD = 1
     compProcess = mp.Process()
+    transmitProcess = mp.Process()
 
     # Open camera
     cam = cv2.VideoCapture(0)
@@ -69,7 +68,7 @@ if __name__ == "__main__":
                 # Start a new process
                 compProcess = mp.Process(target=Compression, args=[flags])
                 compProcess.start()
-                print("Process ", compProcess.pid, " started..")
+                print("Compression process ", compProcess.pid, " started..")
             elif compProcess.is_alive():
                 # Process hasn't exited but is running 
                 # Do nothing
@@ -78,14 +77,42 @@ if __name__ == "__main__":
             elif not compProcess.is_alive() and compProcess.exitcode == 0: 
                 # Process has exited without error
                 compProcess.join()
-                print("Process ", compProcess.pid, " finished successfully.")
+                print("Compression process ", compProcess.pid, " finished successfully.")
                 
                 # Create a new process
                 compProcess = mp.Process(target=Compression, args=[flags])
                 compProcess.start()
-                print("Process ", compProcess.pid, " started.")
+                print("Compression process ", compProcess.pid, " started.")
             elif compProcess.exitcode > 0: 
                 # Process exited with error
-                print("== ERROR: Process ", compProcess.pid, " terminated with error ", compProcess.exitcode, " ==")
+                print("== ERROR: Compression process ", compProcess.pid, " terminated with error ", compProcess.exitcode, " ==")
+            else:
+                print("Shouldn't ever get here")
+                
+        # Determine if files should be transmitted
+        if flags.TRANSMIT:
+            if transmitProcess.exitcode is None and not transmitProcess.is_alive(): 
+                # Process hasn't exited and isn't running
+                # Start a new process
+                transmitProcess = mp.Process(target=Compression, args=[flags])
+                transmitProcess.start()
+                print("Transmit process ", transmitProcess.pid, " started..")
+            elif transmitProcess.is_alive():
+                # Process hasn't exited but is running 
+                # Do nothing
+                # print("-- Process ", transmitProcess.pid, " still running. --")  # Debug statement
+                pass
+            elif not transmitProcess.is_alive() and transmitProcess.exitcode == 0: 
+                # Process has exited without error
+                transmitProcess.join()
+                print("Transmit process ", transmitProcess.pid, " finished successfully.")
+                
+                # Create a new process
+                transmitProcess = mp.Process(target=Transmit, args=[flags])
+                transmitProcess.start()
+                print("Transmit process ", transmitProcess.pid, " started.")
+            elif transmitProcess.exitcode > 0: 
+                # Process exited with error
+                print("== ERROR: Transmit process ", transmitProcess.pid, " terminated with error ", transmitProcess.exitcode, " ==")
             else:
                 print("Shouldn't ever get here")

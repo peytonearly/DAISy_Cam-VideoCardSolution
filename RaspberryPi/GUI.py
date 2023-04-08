@@ -39,8 +39,8 @@ class GUI: # NEEDS REWORK #
             self.Record = 1
             
     def InitializeGUI(self):
-        # Create master window        
-        # Create main sections        
+        # Create master window
+        # Create main sections
         # Layout main sections
         pass
 

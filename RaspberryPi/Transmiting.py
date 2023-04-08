@@ -1,3 +1,6 @@
+### Transmit File ###
+## Acting as client ##
+
 # Import Python libraries
 import socket
 
