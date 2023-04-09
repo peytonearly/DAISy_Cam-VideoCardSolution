@@ -8,7 +8,6 @@ import os
 import datetime
 
 import multiprocessing as mp
-import concurrent.futures
 
 # # Install required libraries
 # print("Installing required libraries.")
@@ -39,6 +38,7 @@ if __name__ == "__main__":
     flags = FLAG()
     flags.METHOD = 0
     flags.RECORD = 1
+    flags.COMNAME = 'COM6' # Uncomment and update to current system if no RPi
     compProcess = mp.Process()
     transmitProcess = mp.Process()
 
@@ -48,9 +48,16 @@ if __name__ == "__main__":
         print("Camera failed to open.")
         exit(1)
 
+    # Open com port (reopen if already open)
+    com = serial.Serial(flags.COMNAME, baudrate=9600)
+    if com.is_open():
+        com.close()
+    com.open()
+
     running = True
 
-    while running:
+    # while running:
+    for _ in range (1000):
         # Update flags
         flags.UpdateFlags()
 
@@ -87,7 +94,8 @@ if __name__ == "__main__":
                 # Process exited with error
                 print("== ERROR: Compression process ", compProcess.pid, " terminated with error ", compProcess.exitcode, " ==")
             else:
-                print("Shouldn't ever get here")
+                # print("Shouldn't ever get here") # Debug statement 
+                pass
                 
         # Determine if files should be transmitted
         if flags.TRANSMIT:
@@ -115,4 +123,15 @@ if __name__ == "__main__":
                 # Process exited with error
                 print("== ERROR: Transmit process ", transmitProcess.pid, " terminated with error ", transmitProcess.exitcode, " ==")
             else:
-                print("Shouldn't ever get here")
+                # print("Shouldn't ever get here") # Debug statement 
+                pass
+
+        # Send movement command to arm
+            com.write(flags.ARMCMD.to_bytes())
+        
+        # Receive serial output from arduino
+            comData = com.read_until()
+            # Do something with comData
+
+    # Program shutdown tasks
+    com.close()

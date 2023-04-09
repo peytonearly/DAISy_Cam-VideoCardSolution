@@ -6,17 +6,24 @@ class FLAG:
     # Class initialization
     def __init__(self):
         # Set flags
-        self.RECORD      = 0  # 1 if recording video
-        self.TRANSMIT    = 0  # 1 if ready to transmit video files
-        self.FOLDER      = 0  # 1 if files are present in the uncompressed image folder
-        self.EQUAL       = 0  # 1 if same number of files in compressed and uncompressed image folders
-        self.METHOD      = 0  # 0 for no compression
-                              # 1 for JPEG2000
-                              # 2 for Run-length encoding
-                              # 3 for Dynamic Huffman encoding
-                              # 4 for Static Huffman encoding
-        self.ACTIVE      = 0  # 1 if compression algorithm is running
-        self.COMPQUAL    = 60 # Compression quality (x % of original quality)
+        self.RECORD   = 0  # 1 if recording video
+        self.TRANSMIT = 0  # 1 if ready to transmit video files
+        self.FOLDER   = 0  # 1 if files are present in the uncompressed image folder
+        self.EQUAL    = 0  # 1 if same number of files in compressed and uncompressed image folders
+        self.METHOD   = 0  # 0 for no compression
+                           # 1 for JPEG2000
+                           # 2 for Run-length encoding
+                           # 3 for Dynamic Huffman encoding
+                           # 4 for Static Huffman encoding
+        self.ACTIVE   = 0  # 1 if compression algorithm is running
+        self.COMPQUAL = 60 # Compression quality (x % of original quality)
+        self.ARMCMD   = 0  # 0 for arm stopped
+                           # 1 for moving arm toward fully opened
+                           # 2 for moving arm toward fully closed
+                           # 3 for looping arm between open and closed
+
+        # Serial communication port name
+        self.COMNAME  = '/dev/serial0'
 
         # Create compressed/uncompressed directories
         self.p = Path(__file__).parent # Set path at current working directory (cwd)
@@ -52,6 +59,7 @@ class FLAG:
     def CheckFolder(self):
         self.FOLDER = any(list(self.u.glob('*.png')))
 
+    # Check if there are any files in the compressed image folder
     def CheckCompressedFolder(self):
         return any(list(self.c.glob('*.png')))
 
