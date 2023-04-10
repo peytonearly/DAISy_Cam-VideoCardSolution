@@ -36,7 +36,7 @@ from Transmiting import Transmit
 if __name__ == "__main__":
     # Initialize classes and variables
     flags = FLAG()
-    flags.METHOD = 0
+    flags.METHOD = 1
     flags.RECORD = 1
     flags.COMNAME = 'COM6' # Uncomment and update to current system if no RPi
     compProcess = mp.Process()
@@ -49,10 +49,10 @@ if __name__ == "__main__":
         exit(1)
 
     # Open com port (reopen if already open)
-    com = serial.Serial(flags.COMNAME, baudrate=9600)
-    if com.is_open():
-        com.close()
-    com.open()
+    # com = serial.Serial(flags.COMNAME, baudrate=9600)
+    # if com.is_open():
+    #     com.close()
+    # com.open()
 
     running = True
 
@@ -127,11 +127,11 @@ if __name__ == "__main__":
                 pass
 
         # Send movement command to arm
-            com.write(flags.ARMCMD.to_bytes())
+            # com.write(flags.ARMCMD.to_bytes())
         
         # Receive serial output from arduino
-            comData = com.read_until()
+            # comData = com.read_until()
             # Do something with comData
 
     # Program shutdown tasks
-    com.close()
+    # com.close()

@@ -19,19 +19,25 @@ def Compression(flags: FLAG):
     if not len(compFiles):
         day = date.today().strftime("%m%d") # Find current mmdd
         todayUStr = day + "U000000.png" # Create image name string from date and naming standard
-        todayCStr = day + "C000000.png" # Create image name string from date and naming standard
+        todayCStr = day + "C000000." + flags.FILETYPE[flags.METHOD][2:]
+        print(todayCStr)
+        # if flags.METHOD == 1:
+        #     todayCStr = day + "C000000.jp2" # Create image name string from date and naming standard
+        # else:
+        #     todayCStr = day + "C000000.png" # Create image name string from date and naming standard
         nextCPath = flags.c / todayCStr
         nextUPath = flags.u / todayUStr
     else:
-        currComp = compFiles[len(compFiles)-1] # Find most recent folder placed in Compressed folder
-        nextUPath = currComp[len(currComp)-15:(len(currComp)-11)] + 'U' + str(int(currComp[(len(currComp)-10):len(currComp)-4])+1).zfill(6) + currComp[len(currComp)-4:]
-        nextCPath = nextUPath[:len(nextUPath)-11] + 'C' + nextUPath[len(nextUPath)-10:]
+        currComp = compFiles[len(compFiles)-1] # Find most recent image placed in compressed folder
+        nextCPath = currComp[len(currComp)-15:(len(currComp)-10)] + str(int(currComp[(len(currComp)-10):len(currComp)-4])+1).zfill(6) + currComp[len(currComp)-4:]
+        # nextUPath = currComp[len(currComp)-15:(len(currComp)-11)] + 'U' + str(int(currComp[(len(currComp)-10):len(currComp)-4])+1).zfill(6) + currComp[len(currComp)-4:]
+        nextUPath = nextCPath[:len(nextCPath)-11] + 'U' + nextCPath[len(nextCPath)-10:len(nextCPath)-3] + 'png'
 
         # Create paths based on file names
         nextUPath = flags.u / nextUPath
         nextCPath = flags.c / nextCPath
 
-    # Continue if file has been created 
+    # Continue if next image to process exists
     if Path(nextUPath).exists():
 
         # Load frame from uncompressed folder
@@ -45,6 +51,7 @@ def Compression(flags: FLAG):
         elif flags.METHOD == 1: 
             # JPEG2000
             params = [cv2.IMWRITE_JPEG2000_COMPRESSION_X1000, flags.COMPQUAL]
+            # print(nextCPath)
         elif flags.METHOD == 2: 
             # Run-length encoding
             params = [cv2.IMWRITE_PNG_STRATEGY_RLE, flags.COMPQUAL]
@@ -63,7 +70,7 @@ def Compression(flags: FLAG):
 # Will run if this file is called #
 if __name__ == "__main__":
     flags = FLAG()
-    flags.METHOD = 0
+    flags.METHOD = 1
 
     while not flags.EQUAL:
         Compression(flags)

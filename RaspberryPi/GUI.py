@@ -1,50 +1,68 @@
-# Import Python libraries
 import tkinter as tk
-
-# Import custom functions
-from Flag import FLAG
-
-# GUI class
-class GUI: # NEEDS REWORK #
-    def __init__(self, flags: FLAG):
-        self.CompressionMethod = 0 # 0 for none
-                                   # 1 for JPEG200
-                                   # 2 for H.264
-                                   # 3 for H.265
-        self.ArmMove = 0 # 0 for retracting arm
-                         # 1 for deploying arm
-                         # 2 for looping arm
-        self.Stop = 0 # 1 if stop arm movement
-        self.Record = 0 # 1 if recording video
-    
-    def StopArm(self):
-        pass
-
-    def UpdateArmMovement(self, val):
-        if val == 0: # Close arm
-            self.ArmMove = 0
-        elif val == 1: # Open arm
-            self.ArmMove = 1
-        elif val == 2: # Loop
-            self.ArmMove = 2
-
-    def UpdateCompMethods(self, selection):
-        if selection > 0 and selection < 4: # Only update flag if value is within expected values
-            self.CompressionMethod = selection
-
-    def UpdateRecord(self):
-        if self.Record:
-            self.Record = 0
+from tkinter import ttk
+class Taskbar(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master, bg='gray')
+        self.is_recording = False
+        self.style = ttk.Style()
+        self.style.configure('Record.TButton', foreground='black', background='#F7F7F7', font=('TkDefaultFont', 12, 'bold'), borderwidth=0)
+        self.style.map('Record.TButton', background=[('pressed', 'gray')], relief=[('pressed', 'sunken')])
+        self.record_button = ttk.Button(self, text="Record", style='Record.TButton', command=self.toggle_recording)
+        self.record_button.pack(side='right', padx=10, pady=5)
+    def toggle_recording(self):
+        if self.is_recording:
+            self.style.configure('Record.TButton', foreground='black', background='#F7F7F7')
+            self.record_button.configure(text='Record')
         else:
-            self.Record = 1
-            
-    def InitializeGUI(self):
-        # Create master window
-        # Create main sections
-        # Layout main sections
-        pass
+            self.style.configure('Record.TButton', foreground='black', background='#F7F7F7')
+            self.record_button.configure(text='Stop')
+        self.is_recording = not self.is_recording
+class TelemetryFrame(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master, bg='green')
+class VideoFrame(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.red_box = tk.Canvas(self, width=400, height=300, bg='red')
+        self.red_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.purple_box = tk.Canvas(self, width=400, height=300, bg='purple')
+        self.purple_box.pack(side='left', padx=10, pady=10, anchor='sw')
 
-### Testing ###
-# Will run if this file is called #
-if __name__ == "__main__":
-    pass
+class ImageFrame(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.blue_box = tk.Canvas(self, width=200, height=300, bg='blue')
+        self.blue_box.pack(side='bottom', padx=10, pady=10, anchor='se')
+
+        # Create four canvas widgets for each quadrant
+        self.top_left = tk.Canvas(self.blue_box, width=400, height=150, bg='brown')
+        self.top_right = tk.Canvas(self.blue_box, width=400, height=150, bg='gray')
+        self.bottom_left = tk.Canvas(self.blue_box, width=400, height=150, bg='black')
+        self.bottom_right = tk.Canvas(self.blue_box, width=400, height=150, bg='red')
+
+        # Place each quadrant in the appropriate location within the blue_box canvas
+        self.blue_box.create_window(0, 0, anchor='nw', window=self.top_left)
+        self.blue_box.create_window(400, 0, anchor='nw', window=self.top_right)
+        self.blue_box.create_window(0, 150, anchor='nw', window=self.bottom_left)
+        self.blue_box.create_window(400, 150, anchor='nw', window=self.bottom_right)
+class MainWindow(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.master = master
+        self.master.geometry("{0}x{1}+0+0".format(self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
+        self.master.state('zoomed')
+        self.master.title("My Window")
+        self.taskbar = Taskbar(self.master)
+        self.taskbar.pack(fill='x', side='top')
+        self.telemetry_frame = TelemetryFrame(self.master)
+        self.telemetry_frame.pack(fill='both', expand=True)
+        self.frame = tk.Frame(self.master)
+        self.frame.pack(side='left', fill='both', expand=True)
+        self.video_frame = VideoFrame(self.frame)
+        self.video_frame.pack(side='left', fill='both', expand=True)
+        self.image_frame = ImageFrame(self.frame)
+        self.image_frame.pack(side='left', fill='both', expand=True)
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = MainWindow(root)
+    app.mainloop()

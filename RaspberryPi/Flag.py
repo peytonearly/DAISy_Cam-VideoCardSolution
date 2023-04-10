@@ -21,6 +21,7 @@ class FLAG:
                            # 1 for moving arm toward fully opened
                            # 2 for moving arm toward fully closed
                            # 3 for looping arm between open and closed
+        self.FILETYPE = ['*.png', '*.jp2', '*.png', '*.png', '*.png']
 
         # Serial communication port name
         self.COMNAME  = '/dev/serial0'
@@ -61,8 +62,8 @@ class FLAG:
 
     # Check if there are any files in the compressed image folder
     def CheckCompressedFolder(self):
-        return any(list(self.c.glob('*.png')))
+        return any(list(self.c.glob(self.FILETYPE[self.METHOD])))
 
     # Check if equal flag should be updated
     def CheckEqual(self):
-        self.EQUAL = len(list(self.u.glob('*.png'))) == len(list(self.c.glob('*.png')))
+        self.EQUAL = len(list(self.u.glob('*.png'))) == len(list(self.c.glob(self.FILETYPE[self.METHOD])))
