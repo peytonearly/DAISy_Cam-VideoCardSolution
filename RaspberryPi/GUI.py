@@ -23,29 +23,29 @@ class TelemetryFrame(tk.Frame):
 class VideoFrame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.red_box = tk.Canvas(self, width=400, height=300, bg='red')
+        self.red_box = tk.Canvas(self, width=350, height=300, bg='red')
         self.red_box.pack(side='left', padx=10, pady=10, anchor='se')
-        self.purple_box = tk.Canvas(self, width=400, height=300, bg='purple')
+        self.purple_box = tk.Canvas(self, width=350, height=300, bg='purple')
         self.purple_box.pack(side='left', padx=10, pady=10, anchor='sw')
 
 class ImageFrame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.yellow_box = tk.Canvas(self, width=100, height=150, bg='yellow')
-        self.yellow_box.pack(side='left', padx=10, pady=10, anchor='sw')
-        self.brown_box = tk.Canvas(self, width=100, height=150, bg='brown')
-        self.brown_box.pack(side='left', padx=10, pady=10, anchor='sw')
-        self.pink_box = tk.Canvas(self, width=100, height=150, bg='pink')
-        self.pink_box.pack(side='left', padx=10, pady=10, anchor='sw')
-        self.grey_box = tk.Canvas(self, width=100, height=150, bg='grey')
-        self.grey_box.pack(side='left', padx=10, pady=10, anchor='sw')
-        self.orange_box = tk.Canvas(self, width=100, height=150, bg='orange')
-        self.orange_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.magenta_button = tk.Button(self, width=350, height=300, bg='magenta', command=self.on_magenta_button_click)
+        self.magenta_button.pack(side='left', padx=10, pady=10, anchor='se')
+        self.purple_button = tk.Button(self, width=350, height=300, bg='purple', command=self.on_purple_button_click)
+        self.purple_button.pack(side='left', padx=10, pady=10, anchor='se')
+
+    def on_magenta_button_click(self):
+        print('Magenta button clicked')
+
+    def on_purple_button_click(self):
+        print('Purple button clicked')
         
-        
-
-
-
+class ArmControls(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        button_Open = ttk.Button()
 
 
 class MainWindow(tk.Frame):
