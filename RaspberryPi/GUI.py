@@ -24,27 +24,30 @@ class VideoFrame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.red_box = tk.Canvas(self, width=400, height=300, bg='red')
-        self.red_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.red_box.pack(side='left', padx=10, pady=10, anchor='se')
         self.purple_box = tk.Canvas(self, width=400, height=300, bg='purple')
         self.purple_box.pack(side='left', padx=10, pady=10, anchor='sw')
 
 class ImageFrame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.blue_box = tk.Canvas(self, width=200, height=300, bg='blue')
-        self.blue_box.pack(side='bottom', padx=10, pady=10, anchor='se')
+        self.yellow_box = tk.Canvas(self, width=100, height=150, bg='yellow')
+        self.yellow_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.brown_box = tk.Canvas(self, width=100, height=150, bg='brown')
+        self.brown_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.pink_box = tk.Canvas(self, width=100, height=150, bg='pink')
+        self.pink_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.grey_box = tk.Canvas(self, width=100, height=150, bg='grey')
+        self.grey_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.orange_box = tk.Canvas(self, width=100, height=150, bg='orange')
+        self.orange_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        
+        
 
-        # Create four canvas widgets for each quadrant
-        self.top_left = tk.Canvas(self.blue_box, width=400, height=150, bg='brown')
-        self.top_right = tk.Canvas(self.blue_box, width=400, height=150, bg='gray')
-        self.bottom_left = tk.Canvas(self.blue_box, width=400, height=150, bg='black')
-        self.bottom_right = tk.Canvas(self.blue_box, width=400, height=150, bg='red')
 
-        # Place each quadrant in the appropriate location within the blue_box canvas
-        self.blue_box.create_window(0, 0, anchor='nw', window=self.top_left)
-        self.blue_box.create_window(400, 0, anchor='nw', window=self.top_right)
-        self.blue_box.create_window(0, 150, anchor='nw', window=self.bottom_left)
-        self.blue_box.create_window(400, 150, anchor='nw', window=self.bottom_right)
+
+
+
 class MainWindow(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -62,6 +65,7 @@ class MainWindow(tk.Frame):
         self.video_frame.pack(side='left', fill='both', expand=True)
         self.image_frame = ImageFrame(self.frame)
         self.image_frame.pack(side='left', fill='both', expand=True)
+
 if __name__ == '__main__':
     root = tk.Tk()
     app = MainWindow(root)
