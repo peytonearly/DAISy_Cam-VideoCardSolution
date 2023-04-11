@@ -70,6 +70,7 @@ if __name__ == "__main__":
 
         # Determine if compression should run
         if not flags.EQUAL:
+            flags.ACTIVE = 1
             if compProcess.exitcode is None and not compProcess.is_alive(): 
                 # Process hasn't exited and isn't running
                 # Start a new process

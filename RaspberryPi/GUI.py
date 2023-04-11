@@ -41,18 +41,18 @@ class ImageFrame(tk.Frame):
         self.grey_box.pack(side='left', padx=10, pady=10, anchor='sw')
         self.orange_box = tk.Canvas(self, width=100, height=150, bg='orange')
         self.orange_box.pack(side='left', padx=10, pady=10, anchor='sw')
-        
-        
 
-
-
-
+class ArmControls(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        button_Open = ttk.Button()
 
 class MainWindow(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.master.geometry("{0}x{1}+0+0".format(self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
+        # self.master.geometry("{0}x{1}+0+0".format(self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
+        self.master.geometry("800x600")
         self.master.state('zoomed')
         self.master.title("My Window")
         self.taskbar = Taskbar(self.master)

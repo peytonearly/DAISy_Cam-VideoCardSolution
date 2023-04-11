@@ -1,7 +1,10 @@
+// Import libraries
 #include <Pixy2.h>
 
 // Create Pixy object
 Pixy2 pixy;
+
+// Initialize constants
 
 // Initialize repeatedly used variables
 int i; // Tracks loop index
