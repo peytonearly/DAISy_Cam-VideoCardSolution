@@ -46,38 +46,37 @@ Stepper stepper(STEPS_PER_REV, STEPPER_PUL_PIN, STEPPER_DIR_PIN);
 // User-Defined Functions //
 ////////////////////////////
 // Read characters from serial port
-char readInChar(char inChar) {
-  char prevChar = inChar;
-  if (Serial.available() > 0) {
-  // while (Serial.available() == 0) {
+char readInChar() {
+  while (Serial.available() == 0) {
     inChar = Serial.read();
     return inChar;
   }
-  return prevChar;
 }
 
 // Move arm toward open
-void armOpen(int step) {
+void armOpen() {
   // Set direction to counterclockwise
   digitalWrite(STEPPER_DIR_PIN, LOW);
-
-  // Send pulse to move arm
-  digitalWrite(STEPPER_PUL_PIN, HIGH);
-  delay(PULSE_DELAY_uS);
-  digitalWrite(STEPPER_PUL_PIN, LOW);
-  delay(PULSE_DELAY_uS);
+  for (i=0; i < MAX_NUM_STEPS; i++) {
+    // Send pulse to move arm
+    digitalWrite(STEPPER_PUL_PIN, HIGH);
+    delay(PULSE_DELAY_uS);
+    digitalWrite(STEPPER_PUL_PIN, LOW);
+    delay(PULSE_DELAY_uS);
+  }
 }
 
 // Move arm toward closed
-void armClose(int step) {
+void armClose() {
   // Set direction to clockwise
   digitalWrite(STEPPER_DIR_PIN, HIGH);
-
-  // Send pulse to move arm
-  digitalWrite(STEPPER_PUL_PIN, HIGH);
-  delay(PULSE_DELAY_uS);
-  digitalWrite(STEPPER_PUL_PIN, LOW);
-  delay(PULSE_DELAY_uS);
+  for (i=0; i < MAX_NUM_STEPS; i++) {
+    // Send pulse to move arm
+    digitalWrite(STEPPER_PUL_PIN, HIGH);
+    delay(PULSE_DELAY_uS);
+    digitalWrite(STEPPER_PUL_PIN, LOW);
+    delay(PULSE_DELAY_uS);
+  }
 }
 
 int armCommand(char inChar, int step, bool loopDir) {
@@ -140,9 +139,6 @@ void setup() {
 
   // Initialize pixy object
   pixy.init();
-
-  // Set step to 0
-  step = 0;
 }
 
 void loop() {
@@ -153,62 +149,26 @@ void loop() {
   // prevChar = inChar;
   inChar = readInChar(inChar);
 
-  // Move arm based on received character value
-  prevStep = step;
-  step = armCommand(inChar, step, (step>=prevStep));
-
-  // Grab pixy blocks
-  pixy.ccc.getBlocks();
-
-  // Assign as irrational values before assigning positions
-  x1 = -1, x2 = -1, x3 = -1, x4 = -1;
-  y1 = -1, y2 = -1, y3 = -1, y4 = -1;
-
-  // Find positions of detected blocks
-  if (pixy.ccc.numBlocks) {
-    for (i = 0; i < pixy.ccc.numBlocks; i++) {
-      x = pixy.ccc.blocks[i].m_x;
-      y = pixy.ccc.blocks[i].m_y;
-
-      switch (pixy.ccc.blocks[i].m_signature) {
-        case 1:
-          x1 = x;
-          y1 = y;
-          break;
-        case 2:
-          x2 = x;
-          y2 = y;
-          break;
-        case 3:
-          x3 = x;
-          y3 = y;
-          break;
-        case 4:
-          x4 = x;
-          y4 = y;
-          break;
-        default:
-          break;
-      }
-    }
+  // Determine command to send to arm
+  switch (inChar) {
+    case '0': // No movement
+      Serial.println("Stopping arm.");
+      break;
+    case '1': // Open arm
+      Serial.println("Opening arm.");
+      armOpen();
+      break;
+    case '2': // Close arm
+      Serial.println("Closing arm.");
+      armClose();
+      break;
+    case '3': // Loop arm
+      Serial.println("Looping arm.");
+      armOpen();
+      delay(1000);
+      armClose(); 
+    default: // Invalid input
+      Serial.println("Invalid input.");
+      break;
   }
-
-  // Print positions to serial com
-  // Serial.print(x1);
-  // Serial.print(",");
-  // Serial.print(y1);
-  // Serial.print(",");
-  // Serial.print(x2);
-  // Serial.print(",");
-  // Serial.print(y2);
-  // Serial.print(",");
-  // Serial.print(x3);
-  // Serial.print(",");
-  // Serial.print(y3);
-  // Serial.print(",");
-  // Serial.print(x4);
-  // Serial.print(",");
-  // Serial.print(y4);
-  // Serial.print(",");
-  // Serial.println(time);
 }

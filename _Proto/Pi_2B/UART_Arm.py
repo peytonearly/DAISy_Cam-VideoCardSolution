@@ -2,8 +2,8 @@ import serial
 from time import sleep
 
 # Create and open serial communication object
-com = serial.Serial('/dev/ttyAMA0', baudrate=9600)
-# com = serial.Serial('/dev/serial0', 9600)
+# com = serial.Serial('/dev/ttyAMA0', baudrate=9600)
+com = serial.Serial('/dev/serial0', baudrate=9600)
 
 # Reopen communication port
 if com.is_open:

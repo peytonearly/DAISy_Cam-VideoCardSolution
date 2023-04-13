@@ -23,14 +23,17 @@ if __name__ == "__main__":
             exit()
         if keyboard.is_pressed("0"): # Stop arm
             signal = 0
+            com.write(signal.to_bytes())
+            print(signal)
         if keyboard.is_pressed("1"): # Open arm
             signal = 1
+            com.write(signal.to_bytes())
+            print(signal)
         if keyboard.is_pressed("2"): # Close arm
             signal = 2
+            com.write(signal.to_bytes())
+            print(signal)
         if keyboard.is_pressed("3"): # Loop open/closed
             signal = 3
-        
-        # Send signal to arduino
-        # com.write(signal.to_bytes())
-        com.write(signal)
-        print(signal)
+            com.write(signal.to_bytes())
+            print(signal)
