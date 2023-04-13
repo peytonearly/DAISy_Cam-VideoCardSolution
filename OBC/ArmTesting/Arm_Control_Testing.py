@@ -2,10 +2,11 @@
 import serial
 import keyboard
 
-COM_PORT = 'COM6'
+com_port = 'COM6'
 
 if __name__ == "__main__":
-    com = serial.Serial(COM_PORT, baudrate=19200)
+    # com = serial.Serial(com_port, baudrate=19200)
+    com = serial.Serial(com_port, baudrate=9600)
     
     # Reopen serial port if open
     if com.is_open:
@@ -30,5 +31,6 @@ if __name__ == "__main__":
             signal = 3
         
         # Send signal to arduino
-        # print(signal)
-        com.write(signal.to_bytes())
+        # com.write(signal.to_bytes())
+        com.write(signal)
+        print(signal)

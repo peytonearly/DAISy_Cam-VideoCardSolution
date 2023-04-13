@@ -23,8 +23,8 @@ void loop()
   pixy.ccc.getBlocks();
 
   // Pre-define as irrational values
-  x1=-1, x2=-1; // x3=-1, x4=-1;
-  y1=-1, y2=-1; // y3=-1, y4=-1;
+  x1=-1, x2=-1, x3=-1; //, x4=-1;
+  y1=-1, y2=-1, y3=-1; //, y4=-1;
 
   // Print detected blocks
   if (pixy.ccc.numBlocks)
@@ -43,10 +43,10 @@ void loop()
           x2 = x;
           y2 = y;
           break;
-        // case 3:
-        //   x3 = x;
-        //   y3 = y;
-        //   break;
+        case 3:
+          x3 = x;
+          y3 = y;
+          break;
         // case 4:
         //   x4 = x;
         //   y4 = y;
@@ -68,10 +68,10 @@ void loop()
   Serial.print(",");
   Serial.print(y2);
   Serial.print(",");
-  // Serial.print(x3);
-  // Serial.print(",");
-  // Serial.print(y3);
-  // Serial.print(",");
+  Serial.print(x3);
+  Serial.print(",");
+  Serial.print(y3);
+  Serial.print(",");
   // Serial.print(x4);
   // Serial.print(",");
   // Serial.print(y4);

@@ -31,9 +31,10 @@ int i;                  // Tracks loop index
 int x, x1, x2, x3, x4;  // Track x position values
 int y, y1, y2, y3, y4;  // Track y position values
 unsigned long time;     // Time keeping variable
-char inChar;            // Incoming serial com character
-int step;               // Step that motor is currently at [0 ... NUM_STEPS]
-bool loopDir;           // Specifies loop direction [false -> Closed | true -> Open]
+char inChar = '0';      // Incoming serial com character
+char prevChar = '0';    // Tracks last received serial com character
+int step = 0;           // Step that motor is currently at [0 ... NUM_STEPS]
+int prevStep;           // Tracks last step
 
 // Create Pixy object
 Pixy2 pixy;
@@ -45,43 +46,41 @@ Stepper stepper(STEPS_PER_REV, STEPPER_PUL_PIN, STEPPER_DIR_PIN);
 // User-Defined Functions //
 ////////////////////////////
 // Read characters from serial port
-char readInChar() {
+char readInChar(char inChar) {
+  char prevChar = inChar;
   if (Serial.available() > 0) {
+  // while (Serial.available() == 0) {
     inChar = Serial.read();
     return inChar;
   }
-  return NULL;
+  return prevChar;
 }
 
 // Move arm toward open
 void armOpen(int step) {
-  if (step > MAX_NUM_STEPS) { // Only run if not above max step number 
-    // Set direction to counterclockwise
-    digitalWrite(STEPPER_DIR_PIN, LOW);
+  // Set direction to counterclockwise
+  digitalWrite(STEPPER_DIR_PIN, LOW);
 
-    // Send pulse to move arm
-    digitalWrite(STEPPER_PUL_PIN, HIGH);
-    delay(PULSE_DELAY_uS);
-    digitalWrite(STEPPER_PUL_PIN, LOW);
-    delay(PULSE_DELAY_uS);
-  }
+  // Send pulse to move arm
+  digitalWrite(STEPPER_PUL_PIN, HIGH);
+  delay(PULSE_DELAY_uS);
+  digitalWrite(STEPPER_PUL_PIN, LOW);
+  delay(PULSE_DELAY_uS);
 }
 
 // Move arm toward closed
 void armClose(int step) {
-  if (step < 0) { // Only run if not below 0 
-    // Set direction to clockwise
-    digitalWrite(STEPPER_DIR_PIN, HIGH);
+  // Set direction to clockwise
+  digitalWrite(STEPPER_DIR_PIN, HIGH);
 
-    // Send pulse to move arm
-    digitalWrite(STEPPER_PUL_PIN, HIGH);
-    delay(PULSE_DELAY_uS);
-    digitalWrite(STEPPER_PUL_PIN, LOW);
-    delay(PULSE_DELAY_uS);
-  }
+  // Send pulse to move arm
+  digitalWrite(STEPPER_PUL_PIN, HIGH);
+  delay(PULSE_DELAY_uS);
+  digitalWrite(STEPPER_PUL_PIN, LOW);
+  delay(PULSE_DELAY_uS);
 }
 
-void armCommand(char inChar, int step, bool loopDir) {
+int armCommand(char inChar, int step, bool loopDir) {
   switch (inChar) {
     case '0':  // No movement
       Serial.println("Stopping arm");
@@ -89,49 +88,52 @@ void armCommand(char inChar, int step, bool loopDir) {
     case '1':  // Open arm
       if (step < MAX_NUM_STEPS) {
         Serial.println("Opening arm");
-        armOpen();
+        armOpen(step);
         step++;
       }
       break;
     case '2':  // Close arm
       if (step > 0) {
         Serial.println("Closing arm");      
-        armClose();
+        armClose(step);
         step--;
       }
       break;
     case '3':  // Loop arm
       Serial.println("Looping arm");
       if (step == 0) { // Arm is fully closed, begin opening
-        loopDir = true;
-        armOpen();
+        armOpen(step);
+        step++;
       }
       else if (step == MAX_NUM_STEPS) { // Arm is fully open, begin closing
-        loopDir = false;
-        armClose();
+        armClose(step);
+        step--;
       }
       else if (loopDir && step < MAX_NUM_STEPS) { // Arm is opening but not fully open
-        armOpen();
+        armOpen(step);
+        step++;
       }
       else if (!loopDir && step > 0) { // Arm is closing but not fully closed
-        armClose();
+        armClose(step);
+        step--;
       }
       else { // Something gotta break to get here
-        continue;
+        break;
       }
       break;
     default:
+      Serial.println("No serial data received.");      
       break;
   }
-  return step, loopDir;
+  return step;
 }
 
 ////////////////////////////
 
 void setup() {
   // Open serial port
-  // Serial.begin(9600);
-  Serial.begin(19200);
+  Serial.begin(9600);
+  // Serial.begin(19200);
 
   // Set the motor speed
   stepper.setSpeed(ROTATION_SPEED);
@@ -141,7 +143,6 @@ void setup() {
 
   // Set step to 0
   step = 0;
-  loopDir = false;
 }
 
 void loop() {
@@ -149,10 +150,12 @@ void loop() {
   time = millis();
 
   // Get incoming serial values
-  inChar = readInChar();
+  // prevChar = inChar;
+  inChar = readInChar(inChar);
 
   // Move arm based on received character value
-  step, loopDir = armCommand(inChar, step, loopDir);
+  prevStep = step;
+  step = armCommand(inChar, step, (step>=prevStep));
 
   // Grab pixy blocks
   pixy.ccc.getBlocks();
@@ -191,21 +194,21 @@ void loop() {
   }
 
   // Print positions to serial com
-  Serial.print(x1);
-  Serial.print(",");
-  Serial.print(y1);
-  Serial.print(",");
-  Serial.print(x2);
-  Serial.print(",");
-  Serial.print(y2);
-  Serial.print(",");
-  Serial.print(x3);
-  Serial.print(",");
-  Serial.print(y3);
-  Serial.print(",");
-  Serial.print(x4);
-  Serial.print(",");
-  Serial.print(y4);
-  Serial.print(",");
-  Serial.println(time);
+  // Serial.print(x1);
+  // Serial.print(",");
+  // Serial.print(y1);
+  // Serial.print(",");
+  // Serial.print(x2);
+  // Serial.print(",");
+  // Serial.print(y2);
+  // Serial.print(",");
+  // Serial.print(x3);
+  // Serial.print(",");
+  // Serial.print(y3);
+  // Serial.print(",");
+  // Serial.print(x4);
+  // Serial.print(",");
+  // Serial.print(y4);
+  // Serial.print(",");
+  // Serial.println(time);
 }
