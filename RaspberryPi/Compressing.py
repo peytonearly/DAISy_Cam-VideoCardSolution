@@ -20,7 +20,7 @@ def Compression(flags: FLAG):
         day = date.today().strftime("%m%d") # Find current mmdd
         todayUStr = day + "U000000.png" # Create image name string from date and naming standard
         todayCStr = day + "C000000." + flags.FILETYPE[flags.METHOD][2:]
-        print(todayCStr)
+        # print(todayCStr)
         # if flags.METHOD == 1:
         #     todayCStr = day + "C000000.jp2" # Create image name string from date and naming standard
         # else:

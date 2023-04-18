@@ -47,10 +47,17 @@ void loop()
           x3 = x;
           y3 = y;
           break;
+<<<<<<< HEAD
         case 4:
           x4 = x;
           y4 = y;
           break;
+=======
+        // case 4:
+        //   x4 = x;
+        //   y4 = y;
+        //   break;
+>>>>>>> d2ba445fd591de6694ac78eb5e60d38834a0adcc
         default:
           break;
       }      
@@ -72,9 +79,16 @@ void loop()
   Serial.print(",");
   Serial.print(y3);
   Serial.print(",");
+<<<<<<< HEAD
   Serial.print(x4);
   Serial.print(",");
   Serial.print(y4);
   Serial.print(",");
+=======
+  // Serial.print(x4);
+  // Serial.print(",");
+  // Serial.print(y4);
+  // Serial.print(",");
+>>>>>>> d2ba445fd591de6694ac78eb5e60d38834a0adcc
   Serial.println(time);
 }

@@ -20,11 +20,11 @@ import serial
 
 # Import project files
 from Flag import FLAG
-import GUI
-from Arm_Control import Arm
+# import GUI
+# from Arm_Control import Arm
 from Compressing import Compression
 from Saving import SaveFrame
-from Transmiting import Transmit
+from Transmitting import Transmit
 
 #########################
 ### Project Functions ###
@@ -36,9 +36,9 @@ from Transmiting import Transmit
 if __name__ == "__main__":
     # Initialize classes and variables
     flags = FLAG()
-    flags.METHOD = 1
-    flags.RECORD = 1
-    flags.COMNAME = 'COM6' # Uncomment and update to current system if no RPi
+    flags.METHOD = 0
+    flags.RECORD = 0
+    # flags.COMNAME = 'COM6' # Uncomment and update to current system if no RPi
     compProcess = mp.Process()
     transmitProcess = mp.Process()
 
@@ -63,6 +63,7 @@ if __name__ == "__main__":
 
         # Read frame
         ret, frame = cam.read()
+        if ret: cv2.imshow('frame', frame)
 
         # Determine if frame should be saved
         if ret and flags.RECORD:
@@ -103,7 +104,7 @@ if __name__ == "__main__":
             if transmitProcess.exitcode is None and not transmitProcess.is_alive(): 
                 # Process hasn't exited and isn't running
                 # Start a new process
-                transmitProcess = mp.Process(target=Compression, args=[flags])
+                transmitProcess = mp.Process(target=Transmit, args=[flags])
                 transmitProcess.start()
                 print("Transmit process ", transmitProcess.pid, " started..")
             elif transmitProcess.is_alive():
