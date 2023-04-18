@@ -17,6 +17,9 @@ from Flag import FLAG
 def GetCompCodecs(flags: FLAG):
     codecs = [] # Initialize array
     files = sorted([str(x) for x in flags.c.iterdir()]) # Create sorted list of files in compressed folder
+
+    print("Searching for codecs.")
+
     for file in files:
         codec = Image.open(file).format
         if codec not in codecs:
@@ -38,7 +41,7 @@ def GetRGBValues(flags: FLAG):
         count = Counter(pixelVals)
         vals.append(count.most_common(5))
 
-    print("Restructuring into dictionary.")
+    print("==> Restructuring into dictionary.")
 
     # Restructure values
     valsDict = {}
@@ -54,7 +57,7 @@ def GetRGBValues(flags: FLAG):
     # Sort values
     valsDict = dict(sorted(valsDict.items(), reverse=True, key=lambda item: item[1]))
 
-    print("Converting to RGB.")
+    print("==> Converting to RGB.")
 
     # Convert values to RGB
     valsRGB = []
@@ -86,8 +89,9 @@ def DisplayRGB(RGB):
 if __name__ == "__main__":
     flags = FLAG()
 
-    # codecs = GetCompCodecs(flags)
-    # print(codecs)
+    codecs = GetCompCodecs(flags)
+    print("==> Found codecs: ")
+    print(codecs)
 
     vals = GetRGBValues(flags)
     for val in vals[:5]:
