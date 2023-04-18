@@ -1,5 +1,5 @@
 // Import libraries
-#include <Pixy2.h>
+//#include <Pixy2.h>
 #include <Stepper.h>
 
 // Define used pins

@@ -18,7 +18,7 @@ void loop() {
 //   Serial.println(char(input)); // Print received character
 // }
 
-  readInChar();
+  inChar = readInChar();
   switch (inChar) {
     case '0': // No movement
       break;
@@ -31,8 +31,9 @@ void loop() {
   }  
 }
 
-void readInChar(){
+char readInChar(){
   if (Serial.available() > 0) {
     inChar = Serial.read();
   }
+  return inChar;
 }

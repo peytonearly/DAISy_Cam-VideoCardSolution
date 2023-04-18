@@ -31,6 +31,7 @@ class VideoFrame(tk.Frame):
 class ImageFrame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+<<<<<<< HEAD
         self.magenta_button = tk.Button(self, width=350, height=300, bg='magenta', command=self.on_magenta_button_click)
         self.magenta_button.pack(side='left', padx=10, pady=10, anchor='se')
         self.purple_button = tk.Button(self, width=350, height=300, bg='purple', command=self.on_purple_button_click)
@@ -46,13 +47,30 @@ class ArmControls(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         button_Open = ttk.Button()
+=======
+        self.yellow_box = tk.Canvas(self, width=100, height=150, bg='yellow')
+        self.yellow_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.brown_box = tk.Canvas(self, width=100, height=150, bg='brown')
+        self.brown_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.pink_box = tk.Canvas(self, width=100, height=150, bg='pink')
+        self.pink_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.grey_box = tk.Canvas(self, width=100, height=150, bg='grey')
+        self.grey_box.pack(side='left', padx=10, pady=10, anchor='sw')
+        self.orange_box = tk.Canvas(self, width=100, height=150, bg='orange')
+        self.orange_box.pack(side='left', padx=10, pady=10, anchor='sw')
+>>>>>>> 001af7b334b622e00345fd7872ef94c5bc7abeb7
 
+class ArmControls(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        button_Open = ttk.Button()
 
 class MainWindow(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.master.geometry("{0}x{1}+0+0".format(self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
+        # self.master.geometry("{0}x{1}+0+0".format(self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
+        self.master.geometry("800x600")
         self.master.state('zoomed')
         self.master.title("My Window")
         self.taskbar = Taskbar(self.master)
