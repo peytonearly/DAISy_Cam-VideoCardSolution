@@ -1,6 +1,7 @@
 # Import libraries
 import cv2
 from pathlib import Path
+import os
 
 # Import custom files
 from Flag import FLAG
@@ -16,80 +17,67 @@ from Flag import FLAG
 # Uncompressed videos --> 'avc1' | .mp4
 # Compressed videos --> 'h264' | .mp4
 
-if __name__ == "__main__":
-    flags = FLAG()
-    flags.METHOD = 1
-    flags.CreateDirectories()
-    flags.UpdateFlags()
+def GetImageSize(filename):
+    cap = cv2.VideoCapture(filename)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    return (width, height)
 
-    fourcc_codes = [
-        'MP42',
-        'MJPG',
-        'MJ2C',
-        'HEVC',
-        'X264'
-    ]
-
-    video_filenames = [
-        "MPEG4",
-        "MotionJPEG",
-        "MotionJPEG2000",
-        "H265",
-        "H264"
-    ]
-
-    video_extensions = [
-        ".mp4v",
-        ".mp4v",
-        ".mj2",
-        ".hev1",
-        ".avc1"
-    ]
-
-    video_method = [
-        "Video_U_",
-        "Video_C_"
-    ]
-
-    size = (640, 360)
-
-    # videoName = "Video_U_" + video_filenames[0] + video_extensions[0]
-    # videoPath = flags.v / videoName
-    # print(videoPath)
-
+def CreateVideo(flags: FLAG):
+    print("Starting video reconstruction.")
+    # Get existing image files
     uncompFiles = flags.GetSortedFilesUncompressed()
     compFiles = flags.GetSortedFilesCompressed()
 
-    # if flags.EQUAL: # Only run if all images have been compressed
-    #     for j in range(len(fourcc_codes)): # Each codec
-    #         # Uncompressed file
-    #         filenameU = video_method[0] + video_filenames[j] + video_extensions[j]
-    #         filepathU = flags.v / filenameU
+    # Get image pixel size
+    # size = (640, 360)
+    size = GetImageSize(uncompFiles[0])
 
-    #         # Compressed file
-    #         filenameC = video_method[1] + video_filenames[j] + video_extensions[j]
-    #         filepathC = flags.v / filenameC
+    nameU1 = flags.v / "Video_U_AVC1.mp4"
+    # nameU2 = flags.v / "Video_U_H264.mp4"
+    nameC1 = flags.v / "Video_C_AVC1.mp4"
+    # nameC2 = flags.v / "Video_C_H264.mp4"
 
-    #         # Create video objects
-    #         videoU = cv2.VideoWriter(str(filepathU), cv2.VideoWriter_fourcc(fourcc_codes[j][0], fourcc_codes[j][1], fourcc_codes[j][2], fourcc_codes[j][3]), 30, size)
-    #         videoC = cv2.VideoWriter(str(filepathC), cv2.VideoWriter_fourcc(fourcc_codes[j][0], fourcc_codes[j][1], fourcc_codes[j][2], fourcc_codes[j][3]), 30, size)
+    print("Creating fourcc codes.")
 
-    #         for f in range(len(uncompFiles)):
-    #             videoU.write(cv2.imread(uncompFiles[f]))
-    #             videoC.write(cv2.imread(compFiles[f]))
-            
-    #         videoU.release()
-    #         videoC.release()
+    # Initialize fourcc codes
+    fcc_mp4v = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    # fcc_mp4v = cv2.VideoWriter_fourcc('a', 'v', 'c', '1')
+    # fcc_h264 = cv2.VideoWriter_fourcc('H', '2', '6', '4')
 
-    # name = "TestVideo_AVC1.mp4"
-    name = "TestVideo_H264.avi"
-    nPath = flags.v / name
-    # video = cv2.VideoWriter(str(nPath), cv2.VideoWriter_fourcc('a', 'v', 'c', '1'), 30, size)
-    video = cv2.VideoWriter(str(nPath), cv2.VideoWriter_fourcc('H', '2', '6', '4'), 30, size)
+    print("Constructing videos from uncompressed images.")
+
+    # Create videos from uncompressed images
+    videoU1 = cv2.VideoWriter(str(nameU1), fcc_mp4v, 30, size)
+    # videoU2 = cv2.VideoWriter(str(nameU2), fcc_h264, 30, size)
     for im in uncompFiles:
-        video.write(cv2.imread(im))
-    video.release()
+        videoU1.write(cv2.imread(im))
+        # videoU2.write(cv2.imread(im))
+    videoU1.release()
+    # videoU2.release()
 
-# TO DO
-# Save uncompressed images into .mp4 with avc1 codec
-# Use ffmpeg command to save into .mp4 with H264 (commandline)
+    print("Constructing videos from compressed images.")
+
+    # Create videos from compressed images
+    videoC1 = cv2.VideoWriter(str(nameC1), fcc_mp4v, 30, size)
+    # videoC2 = cv2.VideoWriter(str(nameC2), fcc_h264, 30, size)
+    for im in compFiles:
+        videoC1.write(cv2.imread(im))
+        # videoC2.write(cv2.imread(im))
+    videoC1.release()
+    # videoC2.release()
+
+    print("Constructing with ffmpeg.")
+
+    # Use ffmpeg to compressed further
+    # ffmpeg -i test.avi -vcodec libx264 test.mp4
+    os.system("ffmpeg -i Videos/Video_U_AVC1.mp4 -vcodec libx264 Videos/Video_U_AVC1_FFMPEG.mp4")
+    # os.system("ffmpeg -i Videos/Video_U_H264.mp4 -vcodec libx264 Videos/Video_U_H264_FFMPEG.mp4")
+
+    print("Finished video reconstruction.")
+
+if __name__ == "__main__":
+    flags = FLAG()
+    flags.METHOD = 1
+    flags.UpdateFlags()
+    CreateVideo(flags)
