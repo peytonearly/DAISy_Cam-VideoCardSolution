@@ -5,6 +5,7 @@
 from pathlib import Path
 from PIL import Image
 import numpy as np
+import imghdr
 from collections import Counter
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Set environment variable to hide Pygame welcome message
@@ -85,15 +86,166 @@ def DisplayRGB(RGB):
     # Quit Pygame
     pygame.quit()
 
+def similarity_func(image_a,image_b):
+    # Load the images
+    img1 = cv2.imread('image1.jpg')
+    img2 = cv2.imread('image2.jpg')
+
+    # Resize the images to the same size (optional)
+    img1 = cv2.resize(img1, (300, 300))
+    img2 = cv2.resize(img2, (300, 300))
+
+    # Calculate the MSE between the two images
+    mse = np.mean((img1 - img2) ** 2)
+
+    # Calculate the percentage similarity between the two images
+    percentage_similarity = (1 - mse / 255 ** 2) * 100
+    
+    return percentage_similarity    
+
 # Debugging section
 if __name__ == "__main__":
     flags = FLAG()
 
-    codecs = GetCompCodecs(flags)
-    print("==> Found codecs: ")
-    print(codecs)
+    # codecs = GetCompCodecs(flags)
+    # print("==> Found codecs: ")
+    # print(codecs)
 
-    vals = GetRGBValues(flags)
-    for val in vals[:5]:
-        print("RGB -> ", val[0])
-        DisplayRGB(val[0])
+    # vals = GetRGBValues(flags)
+    # for val in vals[:5]:
+    #     print("RGB -> ", val[0])
+    #     DisplayRGB(val[0])
+
+    # Rating Compression Script
+
+    # Uncompressed (UC)
+    # Compressed (C)
+    # Decompressed (DC) 
+
+    #UC vs DC
+    #UC vs C
+    # UC vs DC
+    UC_list = {}
+    DC_list = {}
+    C_list = {}
+
+   C_files = flags.GetSortedFilesUncompressed()
+   path_C = flags.c
+
+   UC_files = flags.GetSortedFilesUncompressed()
+   path_UC = flags.uc
+
+   DC_files =flags.GetSortedFilesDecompressed()
+   path_D = flags.d
+
+    # Initiate features of uncompressed
+    #for UC_element in UC_images:
+    for file_name in UC_files:
+        UC = Pic()
+        image = cv2.imread(file_name)
+        height, width = image.shape[:2]
+        UC.height = height
+        UC.width = width
+        UC.codec = imghdr.what(file_name)
+        file_path = os.path.join(path_UC, file_name)
+        UC.filesize = os.path.getsize(file_path)
+        UC_list.append(UC)
+
+    # Initiate features of compressed
+    for file_name in C_files:
+        C = Pic()
+        image = cv2.imread(file_name)
+        height, width = image.shape[:2]
+        C.height = height
+        C.width = width
+        file_path = os.path.join(path_C, file_name)
+        C.codec = imghdr.what(file_name)
+        C.filesize = os.path.getsize(file_path)
+        C_list.append(C)
+
+    # Initiate features of decompressed
+    for file_name in DC_files:
+        DC = Pic()
+        image = cv2.imread(file_name)
+        height, width = image.shape[:2]
+        DC.height = height
+        DC.width = width
+        file_path = os.path.join(path_D, file_name)
+        DC.filesize = os.path.getsize(file_path)
+        DC.codec = imghdr.what(file_name)
+        DC_list.append(DC)
+
+
+    # C vs UC
+
+    # REQ1: Checking codecs (file format should stay the same)
+
+    # REQ2: Checking number of pixels (lossless so it should be the same)
+
+    A_pixel_hit = 0
+    A_codec_hit=  0
+    A_fit = 0
+    A_miss = 0
+
+    for C_item, UC_item in zip(C_list, UC_list):   
+
+    # Set Flags to be false initially
+    codec_val = False
+    pixel_val = False
+
+        # Check Codecs
+    if (C_item.codec == UC_item.codec):
+        codec_val = True
+    
+    else if (C_item.height == UC_item.height & C_item.width == UC_item.width):
+            pixel_val = True
+
+        result = pixel_val & codec_val
+    
+    if (result == True):
+        A_fit+=1
+    else:
+        if (pixel_val == True & codec_val == False):
+            A_pixel_hit+=1
+        else if (pixel_val == False & codec_val = True):
+            A_codec_hit+=1
+        else:
+            A_miss+=1
+
+    comp_ratios = {}
+    similiarity_ratios = {}
+
+    B_pixel_hit = 0
+    B_codec_hit=  0
+    B_fit = 0
+    B_miss = 0
+
+    for DC_item, UC_item in zip(DC_list, UC_list):   
+
+    # Set Flags to be false initially
+    codec_val = False
+    pixel_val = False
+
+
+        # Check Codecs
+    if (DC_item.codec == UC_item.codec):
+        codec_val = True
+    
+    else if (DC_item.height == UC_item.height & DC_item.width == UC_item.width):
+            pixel_val = True
+
+        result = pixel_val & codec_val
+    
+    if (result == True):
+        B_fit+=1
+    else:
+        if (pixel_val == True & codec_val == False):
+            B_pixel_hit+=1
+        else if (pixel_val == False & codec_val = True):
+            B_codec_hit+=1
+        else:
+            B_miss+=1
+
+        # Checking file sizes
+        comp_ratios.append(DC_item.filesize/UC_item.filesize)
+        similiarity_ratios.append(similarity_func(DC_item,UC_item))

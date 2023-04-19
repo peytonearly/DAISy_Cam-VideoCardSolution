@@ -30,13 +30,14 @@ class FLAG:
         self.p = Path(__file__).parent # Set path at current working directory (cwd)
         self.u = self.p / 'Uncompressed'
         self.c = self.p / 'Compressed'
+        self.d = self.p / 'Decompressed'
+        self.v = self.p / 'Videos'
         # self.RemoveDirectories() # Comment out if using Windows system
         self.CreateDirectories()
     
     def RemoveDirectories(self):
         # Remove image directories on launch
-        os.system("rm -r " + str(self.c))
-        os.system("rm -r " + str(self.u))
+        os.system("rm -r {} {} {} {}".format(str(self.u), str(self.c), str(self.d), str(self.v)))
     
     def CreateDirectories(self):
         # Create image directories if they don't yet exist
@@ -44,6 +45,10 @@ class FLAG:
             self.u.mkdir(parents=True, exist_ok=False)
         if not self.c.exists():
             self.c.mkdir(parents=True, exist_ok=False)
+        if not self.d.exists():
+            self.d.mkdir(parents=True, exist_ok=False)
+        if not self.v.exists():
+            self.v.mkdir(parents=True, exist_ok=False)
     
     # Update all flag values
     def UpdateFlags(self):
@@ -67,3 +72,19 @@ class FLAG:
     # Check if equal flag should be updated
     def CheckEqual(self):
         self.EQUAL = len(list(self.u.glob('*.png'))) == len(list(self.c.glob(self.FILETYPE[self.METHOD])))
+
+    # Returns a sorted list of uncompressed file names
+    def GetSortedFilesUncompressed(self):
+        return sorted([str(x) for x in self.u.iterdir()])
+    
+    # Returns a sorted list of compressed file names
+    def GetSortedFilesCompressed(self):
+        return sorted([str(x) for x in self.c.iterdir()])
+    
+    # Returns a sorted list of decompressed file names
+    def GetSortedFilesDecompressed(self):
+        return sorted([str(x) for x in self.d.iterdir()])
+    
+    # Returns a sorted list of video file names
+    def GetSortedVideoFiles(self):
+        return sorted([str(x) for x in self.v.iterdir()])
